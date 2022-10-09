@@ -73,4 +73,10 @@ class Utility{
     return formatDate;
   }
 
+  static List<String> covertParagraphToArray(String paragraph){
+    List<String> listArray = paragraph.split('. ');
+
+    return listArray;
+  }
+
 }

@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
 
 import '../constants.dart';
 
 Widget customAppBar(double screenHeight, double screenWidth, GlobalKey<ScaffoldState> _scaffoldKey){
   return Container(
-    height: screenHeight * 0.12,
+    height: screenHeight * 0.10,
     width: screenWidth,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -30,14 +31,15 @@ Widget customAppBar(double screenHeight, double screenWidth, GlobalKey<ScaffoldS
             child: IconButton(
               onPressed: () => _scaffoldKey.currentState!.openDrawer(),
               icon: Icon(Icons.menu, size: 50,),
-              color: COLOR_GREEN,
+              color: COLOR_BROWN,
             ),
           ),
 
 
+
           Image.asset(
             'assets/logo-cover.png',
-            width: screenWidth * 0.7,
+            width: screenWidth * 0.65,
           )
         ],
       ),
