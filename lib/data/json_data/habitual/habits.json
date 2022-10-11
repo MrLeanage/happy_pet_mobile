@@ -1,0 +1,72 @@
+{"habits": [
+    {"habit": "Itchy",
+     "habit-type": "noun"
+    },
+    {"habit": "Excessive Drinking",
+     "habit-type": "verb"
+    },
+    {"habit": "Poor Appetite",
+     "habit-type": "noun"
+    },
+    {"habit": "More Sleeping and Lying",
+     "habit-type": "verb"
+    },
+    {"habit": "Much Aggresive",
+     "habit-type": "noun"
+    },
+    {"habit": "Fearfullness",
+     "habit-type": "noun"
+    },
+    {"habit": "Rubbing body parts on Surfaces",
+     "habit-type": "verb"
+    },
+    {"habit": "Twitching",
+     "habit-type": "verb"
+    },
+    {"habit": "Staying with other Dogs",
+     "habit-type": "verb"
+    },
+    {"habit": "Stay rolling on dirty Surfaces",
+     "habit-type": "verb"
+    },
+    {"habit": "Poor grooming and Cleaning",
+     "habit-type": "verb"
+    },
+    {"habit": "Show Fidget",
+     "habit-type": "noun"
+    },
+    {"habit": "Head shaking and Titling",
+     "habit-type": "verb"
+    },
+    {"habit": "Show unbalancing Movements",
+     "habit-type": "noun"
+    },
+    {"habit": "Abnormal licking on body Areas",
+     "habit-type": "verb"
+    },
+    {"habit": "Walking in Circles",
+     "habit-type": "verb"
+    },
+    {"habit": "Unusual eye Movements",
+     "habit-type": "noun"
+    },
+    {"habit": "Eating Feces",
+     "habit-type": "verb"
+    },
+    {"habit": "Excessive Grooming",
+     "habit-type": "verb"
+    },
+    {"habit": "Bathing and staying Underwater",
+     "habit-type": "verb"
+    },
+    {"habit": "Skittish",
+     "habit-type": "noun"
+    },
+    {"habit": "Excessive Urination",
+     "habit-type": "noun"
+    },
+    {"habit": "Itching and scraping their Nails",
+     "habit-type": "verb"
+    }
+]
+}

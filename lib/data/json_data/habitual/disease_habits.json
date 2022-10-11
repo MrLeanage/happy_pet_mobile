@@ -1,0 +1,57 @@
+{"disease-habit": [
+    {"name": "Hypothyroidism",
+     "habits": ["Activeless/  lazy", "Sleeping so much", "Less appetite", "Depression", "Anxiety/ aggressive", "Fearfullness", "Erratic temperament"]
+    },
+    {"name": "Dandruff",
+     "habits": ["Chronic itching", "Scratching", "Show Fidget", "Rubbing body parts on  Surfaces"]
+    },
+    {"name": "Lupus",
+     "habits": ["Lethargy", "Itching", "Scratching", "Scraping body parts", "Less appetite"]
+    },
+    {"name": "Ringworm",
+    "habits": ["Staying with other Dogs", "Stay rolling on dirty Surfaces", "Itching", "Poor grooming and Cleaning", "Itching and scraping their Nails"]
+    },
+    {"name": "Impetigo",
+    "habits": ["Depression", "More  Sleeping and Lying","Scratching", "Licking and biting infected", "Poor grooming anf Cleaning","Rubbing stomach or back on the floor and walls"]
+    },
+    {"name": "Yeast Infection",
+    "habits": ["Head shaking and Titling", "Show unbalancing Movements", "Scratching", "Rubbing on many Surfaces", "Abnormal licking on body Areas", "Walking  in Circles", "Unusual eye Movements"]
+    },
+    {"name": "Pemphigus",
+    "habits": ["Lack of appetite", "Depressing", "Lethargy", "Itching sometimes"]
+    },
+    {"name": "Papule",
+        "habits": ["Itchy", "Skin scraping", "Staying dirty places exposed to moisture", "Scratching", "Poor grooming and Cleaning", "Staying dirty with fleas or ticks"]
+    },
+    {"name": "Vesicle",
+        "habits": ["Itchy", "Scratching", "Staying with other Dogs", "Poor grooming and Cleaning"]
+    },
+    {"name": "Melanoma",
+        "habits": ["Sleeping so much", "Abnormal chewing", "Less appetite", "Aggressive"]
+    },
+    {"name": "Alopecia",
+        "habits": ["Itchy", "Poor grooming and Cleaning", "Stress", "Staying dirty with fleas or ticks", " Less appetite"]
+    },
+    {"name": "Dermatits",
+        "habits": ["Chronic itching", "Excessive Scratching ", "Rubbing on the carpet or walls", "Chewing their paws", "Eating Faces", "Excitability", "Excessive Grooming", "Stress"]
+    },
+    {"name": "Folliculitis",
+        "habits": ["Itchy", "Staying dirty", "Staying with other Dogs", "Staying dirty with fleas or ticks", "Poor grooming and Cleaning"]
+    },
+    {"name": "Mange",
+        "habits": ["Scratching", "Itchy/ High at night time", "Less active", "Less appetite", "Rubbing on floors and walls"]
+    },
+    {"name": "Furunculosis",
+        "habits": ["Lazy", "Staying dirty places", "Infect from other Dogs", "Itchy", "Bathing and staying Underwater"]
+    },
+    {"name": "Acne",
+        "habits": ["Infect from other Dogs", "Itchy", "Rubbing their face against the carpet/ Furniture or other Surfaces"]
+    },
+    {"name": "Fleas",
+        "habits": ["Sudden change in behaviour", "Depression and dumps", "Loss of appetite", "Lack of interest normal activities", "Lethargy", "Dirty and clean", "Bite and click their paws"]
+    },
+    {"name": "Seborrhea",
+        "habits": ["Excessive Urination", "Excessive Drinking", "Head shaking behaviour", "Infect from other Dogs", "Staying dirty and lack of clean", "Chronic itching"]
+    }
+]
+}

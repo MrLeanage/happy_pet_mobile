@@ -1,0 +1,57 @@
+{"disease-observation": [
+    {"name": "Hypothyroidism",
+     "observations": ["Lameness", "Cold intolerance", "Weight gain", "Depression", "Slow heart rate", "Broken Hair/ Poor Hair", "Recurring ear infections"]
+    },
+    {"name": "Dandruff",
+     "observations": ["Itching", "Scratching", "Hair Loss", "Scaly skin"]
+    },
+    {"name": "Lupus",
+     "observations": ["Lameness", "Fever", "Hair Loss", "Weight loss", "Muscle stiffness"]
+    },
+    {"name": "Ringworm",
+     "observations": ["Itching", "Scratching", "Hair Loss", "Broken Hair/ Poor Hair", "Scaly skin"]
+    },
+    {"name": "Impetigo",
+     "observations": ["Scratching", "Hair Loss", "Depression", "Weight loss", "Scaly skin", "Bleeding"]
+    },
+    {"name": "Yeast Infection",
+     "observations": ["Scratching", "Hair Loss", "Scaly skin", "Recurring ear infections", "Loss of balance", "Loss of hearing", "Odor"]
+    },
+    {"name": "Pemphigus",
+     "observations": ["Lameness", "Hair Loss", "Depression", "Blisters"]
+    },
+    {"name": "Papule",
+     "observations": ["Itching", "Hair Loss", "Bleeding", "Scaly skin", "Odor"]
+    },
+    {"name": "Vesicle",
+     "observations": ["Hair Loss", "Scaly skin", "Blisters"]
+    },
+    {"name": "Melanoma",
+     "observations": ["Scratching", "Weight loss", "Bleeding", "Limping", "Bad breath"]
+    },
+    {"name": "Alopecia",
+     "observations": ["Itching", "Scratching", "Hair Loss", "Scaly skin", "Bleeding"]
+    },
+    {"name": "Dermatitis",
+     "observations": ["Itching", "Scratching", "Hair Loss", "Scaly skin", "Odor"]
+    },
+    {"name": "Folliculitis",
+     "observations": ["Itching", "Hair Loss", "Scaly skin"]
+    },
+    {"name": "Mange",
+     "observations": ["Itching", "Scratching", "Hair Loss", "Odor"]
+    },
+    {"name": "Furunculosis",
+     "observations": ["Odor", "Scaly skin"]
+    },
+    {"name": "ACNE",
+     "observations": ["Itching", "Scratching"]
+    },
+    {"name": "Fleas",
+     "observations": ["Itching", "Scratching", "Hair Loss"]
+    },
+    {"name": "Seborrhea",
+     "observations": ["Itching", "Scratching", "Broken Hair/ Poor Hair", "Scaly skin"]
+    }   
+]
+}

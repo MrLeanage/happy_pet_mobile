@@ -1,0 +1,10 @@
+{"sentence-pattern": [
+    {"type": "noun",
+     "pattern": ["Can you see any xWord on your pet", "Is there any xWord with your pet"]
+    },
+    {"type": "verb",
+     "pattern": ["is your pet xWord", "Have you seen your pet xWord usually"]
+    }
+],
+"key": "xWord"
+}

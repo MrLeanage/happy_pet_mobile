@@ -1,0 +1,69 @@
+{"observations": [
+    {"observation": "Itching",
+     "observation-type": "verb"
+    },
+    {"observation": "Scratching",
+     "observation-type": "verb"
+    },
+    {"observation": "Lameness",
+     "observation-type": "noun"
+    },
+    {"observation": "Fever",
+     "observation-type": "noun"
+    },
+    {"observation": "Hair Loss",
+     "observation-type": "noun"
+    },
+    {"observation": "Broken Hair/ Poor Hair",
+     "observation-type": "noun"
+    },
+    {"observation": "Depression",
+     "observation-type": "noun"
+    },
+    {"observation": "Weight loss",
+     "observation-type": "noun"
+    },
+    {"observation": "Bleeding",
+     "observation-type": "verb"
+    },
+    {"observation": "Limping",
+     "observation-type": "verb"
+    },
+    {"observation": "Bad breath",
+     "observation-type": "noun"
+    },
+    {"observation": "Weight gain",
+     "observation-type": "noun"
+    },
+    {"observation": "Scaly skin",
+     "observation-type": "noun"
+    },
+    {"observation": "Slow heart rate",
+     "observation-type": "noun"
+    },
+    {"observation": "Muscle stiffness",
+     "observation-type": "noun"
+    },
+    {"observation": "Recurring ear infections",
+     "observation-type": "noun"
+    },
+    {"observation": "Pain and swelling in the joints",
+     "observation-type": "noun"
+    },
+    {"observation": "Loss of balance",
+     "observation-type": "noun"
+    },
+    {"observation": "Loss of hearing",
+     "observation-type": "noun"
+    },
+    {"observation": "Blisters",
+     "observation-type": "noun"
+    },
+    {"observation": "Cold intolerance",
+     "observation-type": "noun"
+    },
+    {"observation": "Odor",
+     "observation-type": "noun"
+    }
+]
+}
