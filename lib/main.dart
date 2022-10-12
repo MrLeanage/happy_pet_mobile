@@ -15,9 +15,16 @@ import 'screens/authenticate/signup_screen.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:provider/provider.dart';
 
-void main() async{
+// void main() async{
+//   WidgetsFlutterBinding.ensureInitialized();
+//   //await Firebase.initializeApp();
+//   runApp(HappyPetApp());
+// }
+
+Future main () async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Firebase.initializeApp();
+  await Firebase.initializeApp();
+
   runApp(HappyPetApp());
 }
 class HappyPetApp extends StatefulWidget {

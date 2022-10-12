@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'dart:ui';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 class ImageDetection extends StatefulWidget {
   static const String id = 'photoPicker_screen';
 
+
   const ImageDetection({Key? key}) : super(key: key);
   @override
   _ImageDetectionState createState() => _ImageDetectionState();
@@ -24,17 +26,37 @@ class ImageDetection extends StatefulWidget {
 class _ImageDetectionState extends State<ImageDetection> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   File? image;
-  String image2 ='images/img.png';
+  UploadTask? uploadTask;
+  String pickedImageFile ='';
+  late XFile? selectedImage;
+  String uid = "abc@gmail.com";
 
-  void selectImage() async {
+
+  Future selectImage() async {
     final ImagePicker imagePicker = ImagePicker();
-    final XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
+    selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
     print(selectedImage?.path);
+    if(selectedImage == null)
+      return;
     setState(() {
-      var a = selectedImage?.path;
-      image2 = a!;
+      var a = selectedImage!.path;
+      pickedImageFile = a;
     }
     );
+  }
+
+  Future uploadFile() async {
+    final path = 'image_files/${uid}/${selectedImage!.name}';
+    final file = File(selectedImage!.path);
+
+    final ref = FirebaseStorage.instance.ref().child(path);
+    ref.putFile(file);
+
+    final snapshot = await uploadTask!.whenComplete(() {});
+
+    final urlDownload = await snapshot.ref.getDownloadURL();
+
+    print('Download Link :  $urlDownload');
   }
 
   void selectImagesCamera() async {
@@ -43,7 +65,7 @@ class _ImageDetectionState extends State<ImageDetection> {
     print(selectedImage?.path);
     setState(() {
       var a = selectedImage?.path;
-      image2 = a!;
+      pickedImageFile = a!;
 
     }
     );
@@ -99,19 +121,40 @@ class _ImageDetectionState extends State<ImageDetection> {
 
               ],
             ),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                ElevatedButton(
+                  child: const Text('Upload Image'),
+                  onPressed: uploadFile,
+                )
+              ],
+            ),
+            const SizedBox(height: 10),
             Container(
               height: 120.0,
               width: 120.0,
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage(
-                      image2
+                      pickedImageFile
                   ),
                   fit: BoxFit.fill,
                 ),
                 shape: BoxShape.circle,
               ),
             ),
+            if (pickedImageFile != null)
+              Expanded(
+                  child: Container(
+                    color: Colors.blue[100],
+                    child: Image.file(
+                      File(pickedImageFile),
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+              )
           ],
         ),
       ),
