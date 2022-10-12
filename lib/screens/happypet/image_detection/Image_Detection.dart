@@ -1,3 +1,6 @@
+
+
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,7 @@ import 'package:flutter/material.dart';
 class ImageDetection extends StatefulWidget {
   static const String id = 'photoPicker_screen';
 
-  const photoPicker({Key? key}) : super(key: key);
+  const ImageDetection({Key? key}) : super(key: key);
   @override
   _ImageDetectionState createState() => _ImageDetectionState();
 }

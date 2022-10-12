@@ -45,7 +45,7 @@ dependencies:
   rflutter_alert: ^2.0.4
   gradient_widgets: ^0.6.0
   bubble: ^1.1.9+1
-  image_picker: ^0.8.5+3
+  image_picker: ^0.8.4+1
 
 dev_dependencies:
   flutter_test:

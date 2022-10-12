@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:bubble/bubble.dart';
@@ -8,6 +9,8 @@ import 'package:happy_pet/utils/custom_widgets/pageHeading_widget.dart';
 import 'package:happy_pet/utils/custom_widgets/sidebar_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'package:http/http.dart' as http;
+
 class HabitDetection extends StatefulWidget {
   @override
   _HabitDetectionState createState() => _HabitDetectionState();
@@ -16,7 +19,10 @@ class HabitDetection extends StatefulWidget {
 class _HabitDetectionState extends State<HabitDetection> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  final Uri botUrl = Uri.parse('http://mrleanage.pythonanywhere.com/analyse_user_input');
   List<String> _data = [];
+
+  String _last_input = '';
 
   TextEditingController queryController = TextEditingController();
   @override
@@ -33,7 +39,7 @@ class _HabitDetectionState extends State<HabitDetection> {
             key: _listKey,
             initialItemCount: _data.length,
             itemBuilder: (BuildContext context, int index,
-                Animation animation) {
+                Animation<double> animation) {
               return buildItem(_data[index], animation, index);
             },
           ),
@@ -73,9 +79,30 @@ class _HabitDetectionState extends State<HabitDetection> {
     );
   }
 
+
   void getResponse() {
+
     if (queryController.text.length > 0) {
       this.insertSingleItem(queryController.text);
+      _last_input = queryController.text;
+
+      var client = getClient();
+      try{
+        client.post(
+          botUrl,
+          body : {
+            "user-input" : _last_input
+          },
+        ).. then((response) {
+          print(response.body);
+          Map<String, dynamic> data = jsonDecode(response.body);
+          insertSingleItem(data['response']['response'] + "<bot>");
+        });
+      }
+      finally{
+        client.close();
+        queryController.clear();
+      }
     }
   }
 
@@ -84,16 +111,21 @@ class _HabitDetectionState extends State<HabitDetection> {
     _listKey.currentState!.insertItem(_data.length - 1);
   }
 
+  //get CLient
+  http.Client getClient(){
+    return http.Client();
+  }
+
 //response
 
 
 //Build widget which will take context animation and label
-  Widget buildItem(String item, Animation animation, int index) {
+  Widget buildItem(String item, Animation<double> scaleAnimations, int index) {
     bool mine = item.endsWith("<bot>");
-    return SizeTransition(
+    return
+      SizeTransition(
       //sizeFactor: animation,
-      sizeFactor: Animation(
-      ),
+      sizeFactor: scaleAnimations,
       child: Padding(
         padding: EdgeInsets.only(top: 10),
         child: Container(
