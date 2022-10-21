@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:happy_pet/model/userDetail.dart';
+import 'package:happy_pet/screens/happypet/app_home/class_builder.dart';
 import 'package:happy_pet/screens/happypet/app_home/AppBase_Screen.dart';
 import 'utils/custom_widgets/loader_widget.dart';
 import 'screens/wrapper.dart';
@@ -22,6 +23,7 @@ import 'package:provider/provider.dart';
 // }
 
 Future main () async {
+  ClassBuilder.registerClasses();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
@@ -43,14 +45,35 @@ class _HappyPetAppState extends State<HappyPetApp> {
         debugShowCheckedModeBanner: false,
 
         title: 'Happy Pet',
-        theme: ThemeData(primaryColor : COLOR_GREEN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
-        home: HomeScreen(2),
+        theme: ThemeData(primaryColor : COLOR_BROWN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
+
+        home: Wrapper(),
         //Routes
         routes:{
           SignupScreen.routeName: (ctx) => SignupScreen(),
           LoginScreen.routeName: (ctx) => LoginScreen(),
-          HomeScreen.routeName: (ctx) => HomeScreen(2)
+          HomeScreen.routeName: (ctx) => HomeScreen()
         }
     );
+    // var val = AuthService().user;
+    // return StreamProvider (
+    //
+    //   initialData:  AuthService().authUser,
+    //   create: (BuildContext context) {
+    //   },
+    //   child: MaterialApp(
+    //       debugShowCheckedModeBanner: false,
+    //
+    //       title: 'Farm Buddy',
+    //       theme: ThemeData(primaryColor : COLOR_GREEN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
+    //       home: Wrapper(),
+    //       //Routes
+    //       routes:{
+    //         SignupScreen.routeName: (ctx) => SignupScreen(),
+    //         LoginScreen.routeName: (ctx) => LoginScreen(),
+    //         HomeScreen.routeName: (ctx) => HomeScreen(2)
+    //       }
+    //   ),
+    // );
   }
 }

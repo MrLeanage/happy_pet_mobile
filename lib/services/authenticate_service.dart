@@ -12,6 +12,10 @@ class AuthService{
     print(userFromFirebaseUser);
     return firebaseAuth.authStateChanges();
   }
+
+  User? get authUser{
+    FirebaseAuth.instance.currentUser;
+  }
   //sign in Anon
   Future signInAnon() async{
 

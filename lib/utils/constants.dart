@@ -11,6 +11,43 @@ const COLOR_RED = Color.fromRGBO(255,0,0,1);
 const COLOR_BROWN = Color.fromRGBO(65, 27, 12, 1);
 const COLOR_BACKGROUND =  Color.fromRGBO(255,255,255,1);
 const COLOR_LIGHT_GREEN = Colors.green;
+const COLOR_BROWN_LIGHT1 = Color.fromRGBO(147, 29, 3, 1);
+const COLOR_BACKGROUND_LIGHT =  Color.fromRGBO(203,147,18,1);
+
+
+const APP_BACKGROUND_PATH = "assets/app/background.jpg";
+const APP_ICON_PATH = "assets/app/icon.png";
+const APP_LOGO_COVER_PATH = "assets/app/logo-cover.png";
+const APP_AVATAR_PATH = "assets/app/avatar.png";
+const APP_LOGO_PATH = "assets/app/logo.png";
+const APP_AIR_CONDITIONER_PATH = "assets/app/air-conditioner.png";
+const APP_CREATIVE_PATH = "assets/app/creative.png";
+const APP_WASHING_MACHINE_PATH = "assets/app/washing-machine.png";
+const APP_DIAGNOSE_COVER_PATH = "assets/app/diagnose-cover.png";
+const APP_ASK_OBSERVATION_COVER = "assets/app/ask-observation-cover.png";
+const APP_ASK_HABIT_COVER = "assets/app/ask-habit-cover.jpg";
+const APP_CAPTURE_IMAGES_COVER = "assets/app/capture-images-cover.jpg";
+const APP_DIAGNOSIS_REPORT_COVER = "assets/app/diagnosis-report-cover.jpg";
+
+// - assets/app/background.jpg
+// - assets/app/icon.png
+// - assets/app/logo-cover.png
+// - assets/app/avatar.png
+// - assets/app/logo.png
+// - assets/app/air-conditioner.png
+// - assets/app/creative.png
+// - assets/app/washing-machine.png
+// - assets/app/diagnose-cover.png
+// - assets/app/ask-observation-cover.png
+//- assets/app/ask-habit-cover.jpg
+//- assets/app/capture-images-cover.jpg
+//- assets/app/diagnosis-report-cover.jpg
+//
+const USER_IMAGE_PATH = "assets/user/image.jpg";
+const USER_PICTURE1_PATH = "assets/user/picture1.jpg";
+// - assets/user/image.jpg
+// - assets/user/picture1.jpg
+
 
 const TextTheme TEXT_THEME_DEFAULT = TextTheme(
   headline1: TextStyle(
