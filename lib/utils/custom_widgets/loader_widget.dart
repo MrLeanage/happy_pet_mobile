@@ -16,6 +16,22 @@ class Loader extends StatelessWidget{
     return Scaffold(
       body: BaseWidget(
         child: Container(
+          decoration: BoxDecoration(
+            //   gradient:LinearGradient(
+            //       colors: [
+            //         COLOR_BROWN,
+            //         COLOR_BROWN_LIGHT1
+            //       ],
+            //       begin: const FractionalOffset(0.4, 0.0),
+            //       end: const FractionalOffset(1.0, 0.0),
+            //       stops: [0.0, 1.0],
+            //       tileMode: TileMode.clamp),
+            image: DecorationImage(
+              image: AssetImage(APP_BACKGROUND_PATH),
+              fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(Colors.white.withOpacity(0.2), BlendMode.dstATop),
+            ),
+          ),
           width: size.width,
           height: size.height,
           child: Column(
@@ -37,12 +53,12 @@ class Loader extends StatelessWidget{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SpinKitFadingCircle(
-                    color: COLOR_GREEN,
+                    color: COLOR_BROWN,
                     size: 100.0,
                   ),
                 ],
               ),
-              Image.asset('assets/logo-cover.png'),
+              Image.asset(APP_LOGO_COVER_PATH),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[

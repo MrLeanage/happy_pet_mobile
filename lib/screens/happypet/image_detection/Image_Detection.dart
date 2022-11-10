@@ -81,10 +81,10 @@ class _ImageDetectionState extends State<ImageDetection> {
       body: Center(
         child: Column(
           children: <Widget>[
-            Text(
-              'Choose Profile Picture',
-              style: TextStyle(fontSize: 20.0),
-            ),
+            // Text(
+            //   'Choose Profile Picture',
+            //   style: TextStyle(fontSize: 20.0),
+            // ),
             SizedBox(
               height: 20,
             ),

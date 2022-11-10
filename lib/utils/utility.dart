@@ -79,4 +79,9 @@ class Utility{
     return listArray;
   }
 
+  static Size getContainerSize(BuildContext context) {
+    final box = context.findRenderObject() as RenderBox;
+    return box.size;
+  }
+
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:happy_pet/services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
+import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
 
 import 'login_screen.dart';
@@ -40,14 +41,28 @@ class _SignupScreenState extends State<SignupScreen> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-                color: COLOR_WHITE
+            //   gradient:LinearGradient(
+            //       colors: [
+            //         COLOR_BROWN,
+            //         COLOR_BROWN_LIGHT1
+            //       ],
+            //       begin: const FractionalOffset(0.4, 0.0),
+            //       end: const FractionalOffset(1.0, 0.0),
+            //       stops: [0.0, 1.0],
+            //       tileMode: TileMode.clamp),
+              image: DecorationImage(
+                image: AssetImage(APP_BACKGROUND_PATH),
+                fit: BoxFit.cover,
+              ),
             ),
+
           ),
           Center(
             child: Card(
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)
+                  borderRadius: BorderRadius.circular(30.0),
               ),
+              color: Colors.white.withOpacity(0.9),
               child: Container(
                 height: size.height*0.72,
                 width: 300,
@@ -57,10 +72,10 @@ class _SignupScreenState extends State<SignupScreen> {
                   child: SingleChildScrollView(
                     child: Column(
                       children: <Widget>[
-                        Image.asset('assets/logo-cover.png'),
+                        Image.asset(APP_LOGO_COVER_PATH),
                         //Email Field
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Email'),
+                          decoration: customInputDecoration('ENTER YOUR EMAIL', size, Icons.email),
                           keyboardType: TextInputType.emailAddress,
                           validator: (value){
                             if(value!.isEmpty || !value.contains('@')){
@@ -73,8 +88,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         ),
                         // password Field
+                        SizedBox(height: size.height * 0.02),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Password'),
+                          decoration: customInputDecoration('ENTER YOUR PASSWORD', size, Icons.lock),
                           obscureText: true,
                           controller: _passwordController,
                           validator: (value){
@@ -85,8 +101,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         ),
                         //Confirm Password
+                        SizedBox(height: size.height * 0.02),
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Confirm Password'),
+                          decoration: customInputDecoration('CONFIRM YOUR PASSWORD', size, Icons.lock),
                           obscureText: true,
                           validator: (value){
                             if(value!.isEmpty || value != _passwordController.text){
@@ -109,10 +126,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         ElevatedButton(
 
                           child: Text(
-                            'Sign Up',
+                            'SIGN UP',
                           ),
                           style: ElevatedButton.styleFrom(
-                              primary: COLOR_YELLOW,
+                              primary: COLOR_BROWN,
                               minimumSize: Size(size.width, size.height*0.05),
                               textStyle: TextStyle(
                                   color: COLOR_BLACK
@@ -139,15 +156,15 @@ class _SignupScreenState extends State<SignupScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
+                                  Icon(
+                                    Icons.person,
+                                  ),
                                   Text(
                                       'Login',
                                       style: TextStyle(
                                         color: Colors.white,
 
                                       )
-                                  ),
-                                  Icon(
-                                    Icons.person,
                                   )
                                 ],
                               ),

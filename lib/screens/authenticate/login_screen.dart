@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:happy_pet/screens/happypet/app_home/AppBase_Screen.dart';
 import 'package:happy_pet/services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
+import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
 
 import '../../utils/custom_widgets/loader_widget.dart';
@@ -29,19 +31,26 @@ class _LoginScreenState extends State<LoginScreen> {
     print("Password :" + password);
     setState(() => loading = true);
 
-    dynamic result = await _authService.signInWithEmailAndPassword(email, password);
-    if(result == null){
-      setState(() => loading = false);
-      setState(() => loginError = 'Please check your Internet Connection');
-    }
-    if(result.toString().contains('no user record corresponding')){
-      setState(() => loading = false);
-      setState(() => loginError = 'Invalid Email, Please Sign Up!');
-    }
-    if(result.toString().contains('password is invalid')){
-      setState(() => loading = false);
-      setState(() => loginError = 'Invalid Password!');
-    }
+    await Future.delayed(Duration(seconds: 5));
+    setState(() => loading = false);
+    Navigator.push(context, MaterialPageRoute(builder: (context){
+      return HomeScreen();
+    }));
+
+    // dynamic result = await _authService.signInWithEmailAndPassword(email, password);
+    // if(result == null){
+    //   setState(() => loading = false);
+    //   setState(() => loginError = 'Please check your Internet Connection');
+    // }
+    // if(result.toString().contains('no user record corresponding')){
+    //   setState(() => loading = false);
+    //   setState(() => loginError = 'Invalid Email, Please Sign Up!');
+    // }
+    // if(result.toString().contains('password is invalid')){
+    //   setState(() => loading = false);
+    //   setState(() => loginError = 'Invalid Password!');
+    // }
+
   }
 
 
@@ -54,24 +63,29 @@ class _LoginScreenState extends State<LoginScreen> {
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
-              gradient:LinearGradient(
-                  colors: [
-                    COLOR_YELLOW,
-                    COLOR_WHITE
-                  ],
-                  begin: const FractionalOffset(0.4, 0.0),
-                  end: const FractionalOffset(1.0, 0.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp),
+              // gradient:LinearGradient(
+              //     colors: [
+              //       COLOR_BROWN,
+              //       COLOR_BROWN_LIGHT1
+              //     ],
+              //     begin: const FractionalOffset(0.4, 0.0),
+              //     end: const FractionalOffset(1.0, 0.0),
+              //     stops: [0.0, 1.0],
+              //     tileMode: TileMode.clamp),
+              image: DecorationImage(
+                image: AssetImage(APP_BACKGROUND_PATH),
+                fit: BoxFit.cover,
+              ),
             ),
           ),
           Center(
             child: Card(
-
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0)
+                borderRadius: BorderRadius.circular(30.0)
               ),
+              color: Colors.white.withOpacity(0.9),
               child: Container(
+
                 height: 400,
                 width: 300,
                 padding: EdgeInsets.all(16),
@@ -81,12 +95,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     child:
                     Column(
                       children: <Widget>[
-                        Image.asset('assets/logo-cover.png'),
+                        Image.asset(APP_LOGO_COVER_PATH),
                         //Email Field
                         TextFormField(
-                          decoration: InputDecoration(
-                            labelText: 'Email',
-                          ),
+                          decoration: customInputDecoration('ENTER YOUR EMAIL', size, Icons.email),
 
                           keyboardType: TextInputType.emailAddress,
                           validator: (value){
@@ -99,9 +111,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             setState(() => email = value);
                           },
                         ),
+                        SizedBox(height: 12.0,),
                         // password Field
                         TextFormField(
-                          decoration: InputDecoration(labelText: 'Password'),
+                          decoration: customInputDecoration('ENTER YOUR PASSWORD', size, Icons.lock),
                           obscureText: true,
                           validator: (value){
                             if(value!.isEmpty || value.length <= 5){
@@ -124,10 +137,10 @@ class _LoginScreenState extends State<LoginScreen> {
                        ElevatedButton(
 
                          child: Text(
-                           'Login',
+                           'LOGIN',
                          ),
                          style: ElevatedButton.styleFrom(
-                          primary: COLOR_YELLOW,
+                          primary: COLOR_BROWN,
                            minimumSize: Size(size.width, size.height*0.05),
                            textStyle: TextStyle(
                              color: COLOR_BLACK
@@ -154,15 +167,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  Text(
-                                      'Signup',
-                                      style: TextStyle(
-                                        color: Colors.white,
-
-                                      )
-                                  ),
                                   Icon(
                                     Icons.person,
+                                  ),
+                                  Text(
+                                      'SIGN UP',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: size.height * 0.017
+
+                                      )
                                   )
                                 ],
                               ),

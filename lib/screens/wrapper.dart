@@ -12,14 +12,14 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     //return either home or authenticate widget
     print('user from wrapper build started');
-    final user = Provider.of<User>(context);
+    final user = FirebaseAuth.instance.currentUser;
     print( user);
     if(user == null){
       print('called wrapper inside');
       return Authenticate();
     }else{
       print('called wrapper inside');
-      return HomeScreen(2);
+      return HomeScreen();
     }
   }
 }
