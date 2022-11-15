@@ -16,6 +16,8 @@ class PetDetailPage extends StatefulWidget {
 class _PetDetailPageState extends State<PetDetailPage> {
   String imagePath;
   _PetDetailPageState(this.imagePath);
+  String petID = 'p123';
+  String userID = 'xyz@gmail.com';
 
   bool tempValue = false;
 
@@ -319,8 +321,8 @@ class _PetDetailPageState extends State<PetDetailPage> {
                                           print('Edit Clicked'),
                                           Navigator.of(context).push(MaterialPageRoute(
                                               builder: (context) => StartDiagnosisPage(
-                                                petID: "p123",
-                                                userID: "u123",
+                                                petID: petID,
+                                                userID: userID,
                                               )
                                           )
                                           )

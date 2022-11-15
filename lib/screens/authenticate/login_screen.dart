@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:happy_pet/screens/happypet/app_home/AppBase_Screen.dart';
-import 'package:happy_pet/services/authenticate_service.dart';
+import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
     print("Password :" + password);
     setState(() => loading = true);
 
-    await Future.delayed(Duration(seconds: 5));
+    await Future.delayed(Duration(seconds: 10));
     setState(() => loading = false);
     Navigator.push(context, MaterialPageRoute(builder: (context){
       return HomeScreen();
@@ -159,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Text(
                               'New User? Sign Up Now'
                             ),
-                            addHorizontalSpace(10),
+                            addHorizontalSpace(5),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 primary: COLOR_GREEN

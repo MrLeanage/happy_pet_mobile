@@ -75,7 +75,10 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.all(10),
                       color: Colors.amber[100],
                       child: Text("HAPPY PET is the smart app that can be used to detect the pet's skin diseases and present the high recommended home remedies as the treatment methods for each detected diseases with very high accuracy by going through the verification processes and predictions with modern ICT technologies"
-                          , style: TextStyle(color: Colors.black),),
+                          , style: TextStyle(
+                            color: Colors.black,
+                          fontSize: 16
+                        ),),
                     ),
                     SizedBox(height: 30),
                     Container(

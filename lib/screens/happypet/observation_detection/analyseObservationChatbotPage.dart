@@ -2,6 +2,14 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:happy_pet/model/imageAnalysis/imageAnalysis.dart';
+import 'package:happy_pet/model/observationAnalysis/observationQuestion.dart';
+import 'package:happy_pet/model/welcomeNote.dart';
+import 'package:happy_pet/screens/happypet/app_remedies/startDiagnosticPage.dart';
+import 'package:happy_pet/screens/happypet/habit_detection/analyseHabitChatbotPage.dart';
+import 'package:happy_pet/services/api_services/image_detection_api_services.dart';
+import 'package:happy_pet/services/api_services/observation_api_services.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:bubble/bubble.dart';
@@ -11,43 +19,92 @@ import 'package:happy_pet/screens/happypet/image_detection/analysePetImagesPage.
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:happy_pet/utils/custom_widgets/appLoader.dart';
 
 class AnalyseObservationChatBotPage extends StatefulWidget {
   final petID;
   final userID;
+  ImageAnalysis imageAnalysis;
 
 
-  AnalyseObservationChatBotPage({Key? key, this.petID, this.userID}) : super(key: key);
+  AnalyseObservationChatBotPage({Key? key, this.petID, this.userID, required this.imageAnalysis}) : super(key: key);
 
   @override
-  _AnalyseObservationChatBotPageState createState() => _AnalyseObservationChatBotPageState(petID, userID);
+  _AnalyseObservationChatBotPageState createState() => _AnalyseObservationChatBotPageState(petID, userID, imageAnalysis);
 }
 
 class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBotPage> {
+  bool isLoading = false;
   List<String> _data = [];
   String petID;
   String userID;
-  _AnalyseObservationChatBotPageState(this.petID, this.userID);
+  ImageAnalysis imageAnalysis;
+  _AnalyseObservationChatBotPageState(this.petID, this.userID, this.imageAnalysis);
 
   static const String id = 'photoPicker_screen';
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
   final Uri botUrl = Uri.parse('http://mrleanage.pythonanywhere.com/analyse_user_input');
-
-
-
-  String _last_input = '';
-
-
   TextEditingController queryController = TextEditingController();
+  List<ObservationQuestion> observationQuestionList = [];
+  List<String> suspectImageAnalysisDiseaseList = [];
+  late WelcomeNote welcomeNote;
+  ScrollController _scrollController = new ScrollController();
+  int lastCalledIndex = 0;
+  String suspectedDiseaseFromObservation = '';
+  String _lastInput = '';
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    this.fetchObservationInitialData();
+
+  }
+
+  fetchObservationInitialData() async {
+    print("Init Called ");
+    ObservationAPIService observationAPIService = new ObservationAPIService();
+    imageAnalysis.analysedImageDisease.forEach((element) {
+      suspectImageAnalysisDiseaseList.add(element.diseaseName);
+      print(element.diseaseName);
+    });
+
+
+    observationQuestionList =  await observationAPIService.analyseDiseasedImageList(suspectImageAnalysisDiseaseList).whenComplete(() async => {
+    SmartDialog.dismiss(),
+    welcomeNote = await observationAPIService.retrieveWelcomeNote(),
+
+    setState(() {
+      setData();
+    }),
+    });
+
+
+
+  }
+
+  setData() async {
+    insertSingleItem(welcomeNote.greeting + "<bot>");
+    print( welcomeNote.greeting + "<bot>");
+    await Future.delayed(Duration(seconds: 5));
+    insertSingleItem(welcomeNote.welcomeNote_1+ "<bot>");
+    await Future.delayed(Duration(seconds: 7));
+    insertSingleItem("For that we will ask some Questions from you regarding Pet's recent Observations"+ "<bot>");
+    await Future.delayed(Duration(seconds: 5));
+    insertSingleItem(welcomeNote.welcomeNote_2+ "<bot>");
+    await Future.delayed(Duration(seconds: 5));
+    insertSingleItem(welcomeNote.sentenceConnector+ "<bot>");
+    await Future.delayed(Duration(seconds: 5));
+    insertSingleItem(observationQuestionList.elementAt(0).observationQuestion+ "?..<bot>");
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    _data.insert(0, 'Hello..<bot>');
-    _data.insert(1, "We want to collect information about your pet's behavior in order to identify the disease.<bot>");
-    _data.insert(2, "If the behavior is not state 'NO', else answer 'YES'. <bot>");
-    _data.insert(3, 'So, lets start the Q&A <bot>');
-    _data.insert(4, "Okay Lets start.");
+
 
 
     final Size size = MediaQuery.of(context).size;
@@ -67,118 +124,28 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
 
           Padding(
             padding: EdgeInsets.only(top: size.height * 0.34, left: size.width * 0.012, right:size.width * 0.012 ),
-            // child: ListView(
-            //   children: [
-            //     new Align(
-            //       alignment: Alignment.topCenter,
-            //       child: Container(
-            //           width: MediaQuery.of(context).size.width,
-            //           height: MediaQuery.of(context).size.height,
-            //           decoration: BoxDecoration(
-            //             borderRadius: BorderRadius.all(Radius.circular(20)),
-            //             color: Colors.white70.withOpacity(0.8),
-            //           ),
-            //           child: new Column(
-            //             children: <Widget>[
-            //               SizedBox(height: 10),
-            //
-            //               Container(
-            //                 alignment: Alignment.centerLeft,
-            //                 padding: EdgeInsets.only(left: 10, right: 10),
-            //                 child: Column(
-            //                   crossAxisAlignment: CrossAxisAlignment.start,
-            //                   children: [
-            //                     SizedBox(height: size.height * 0.005,),
-            //                     Row(
-            //                       children: [
-            //                         Container(
-            //                           width: size.width*0.9,
-            //                           height: size.height*0.12 ,
-            //                           child: Padding(
-            //                             padding: const EdgeInsets.all(0),
-            //                             child: RichText(
-            //                               maxLines: null,
-            //                               textAlign: TextAlign.justify,
-            //                               text: TextSpan(
-            //
-            //                                 text: "Happy Pet is ready to start your pet's diagnosis for the skin diseases. Please tap on START button to start the diagnosis",
-            //                                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: COLOR_BLACK),
-            //
-            //                               ),
-            //                             ),
-            //                           ),
-            //                         ),
-            //
-            //                       ],
-            //                     ),
-            //                     Row(
-            //                       children: [
-            //                         // Container(
-            //                         //   height: size.height * 0.1,
-            //                         //   width: size.width * 0.9,
-            //                         //   padding: EdgeInsets.only(left: 10, top: 5, bottom: 5, right: 5),
-            //                         //   // color: Colors.redAccent,
-            //                         //   child: ElevatedButton(
-            //                         //     onPressed: () => {
-            //                         //       print('Edit Clicked'),
-            //                         //       Navigator.of(context).push(MaterialPageRoute(
-            //                         //           builder: (context) => AnalysePetImagesPage(
-            //                         //             petID: "p123",
-            //                         //             userID: "u123",
-            //                         //           )
-            //                         //       )
-            //                         //       )},
-            //                         //     child: Wrap(children : [
-            //                         //       Icon(
-            //                         //         Icons.check,
-            //                         //         color: COLOR_WHITE,
-            //                         //         size: 30,
-            //                         //       ),
-            //                         //       SizedBox(width: 20,),
-            //                         //       Text(
-            //                         //         'CHAT BOT',
-            //                         //         style: TextStyle(
-            //                         //             fontWeight: FontWeight.bold,
-            //                         //             fontSize: 25
-            //                         //         ),
-            //                         //       )
-            //                         //     ],),
-            //                         //     style: ElevatedButton.styleFrom(
-            //                         //       primary: Colors.blueAccent,
-            //                         //     ),
-            //                         //   ),
-            //                         // ),
-            //
-            //                       ],
-            //                     ),
-            //
-            //                   ],
-            //                 ),
-            //
-            //               )
-            //
-            //             ],
-            //           )
-            //       ),
-            //     ),
-            //     SizedBox(height: 5),
-            //
-            //   ],
-            // ),
+
             child: Padding(
               padding: EdgeInsets.only(top: size.height * 0.065),
               child: Container(
-                height: size.height * 0.585,
+                height: size.height,
                 color: Colors.white,
+                padding: EdgeInsets.only(top : 20, bottom: 20),
                 child: Stack(
 
                   children: <Widget>[
                     AnimatedList(
-                      padding: EdgeInsets.all(16.0),
+                      controller: _scrollController,
+                      padding: EdgeInsets.only(top: 20, bottom: 150, left: 16, right: 16),
                       key: _listKey,
                       initialItemCount: _data.length,
                       itemBuilder: (BuildContext context, int index,
                           Animation<double> animation) {
+                        if(index == _data.length){
+                          return Container(
+                            height: 250,
+                          );
+                        }
                         return buildItem(_data[index], animation, index);
                       },
                     ),
@@ -187,25 +154,29 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
                       child: ColorFiltered(
                         colorFilter: ColorFilter.linearToSrgbGamma(),
                         child: Container(
-                          color: Colors.deepPurpleAccent,
+                          color: Colors.grey,
                           child: Padding(
                             padding: EdgeInsets.only(left: 20, right: 20),
                             child: TextField(
+
                               style: TextStyle(
-                                  color: Colors.white
+                                  color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500
+
                               ),
                               decoration: InputDecoration(
                                   icon: Icon(
                                     Icons.message,
-                                    color: Colors.white,
+                                    color: COLOR_BLACK,
                                   ),
-                                  hintText: "Message",
-                                  fillColor: Colors.white
+                                  hintText: "Type Your Message Here",
+                                  fillColor: Colors.white70
                               ),
                               controller: queryController,
                               textInputAction: TextInputAction.send,
                               onSubmitted: (msg) {
-                                this.getResponse();
+                                this.getResponse(size);
                               },
 
                             ),
@@ -214,7 +185,7 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
                       ),
                     )
                   ],
-                )
+                ),
               ),
             ),
           ),
@@ -242,7 +213,7 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                            image: AssetImage(APP_BACKGROUND_PATH),
+                            image: AssetImage(APP_AVATAR_PATH),
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(width: 15)
@@ -311,34 +282,64 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
           ),
 
         ],
-      ),
+      ) ,
     );
   }
 
   //response
-  void getResponse() {
+  Future<void> getResponse(Size size) async {
 
     if (queryController.text.length > 0) {
       this.insertSingleItem(queryController.text);
-      _last_input = queryController.text;
 
-      var client = getClient();
-      try{
-        client.post(
-          botUrl,
-          body : {
-            "user-input" : _last_input
-          },
-        ).. then((response) {
-          print(response.body);
-          Map<String, dynamic> data = jsonDecode(response.body);
-          insertSingleItem(data['response']['response'] + "<bot>");
-        });
+      _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 200), curve: Curves.easeOut);
+
+      _lastInput = queryController.text;
+      queryController.clear();
+
+      if(_lastInput.toLowerCase() == 'yes' || _lastInput.toLowerCase() == 'no'){
+        observationQuestionList.elementAt(lastCalledIndex).observationAnswer = _lastInput.toUpperCase();
+        if(observationQuestionList.length == lastCalledIndex + 1){
+          observationQuestionList.forEach((element) {
+            print(element.observationName + " : " + element.observationAnswer);
+          });
+          SmartDialog.showLoading(
+            widget: AppLoader.popupLoader(size),
+          );
+          List<String> suspectedObservations = [];
+          observationQuestionList.forEach((element) {
+            if(element.observationAnswer == 'YES'){
+              suspectedObservations.add(element.observationName);
+            }
+          });
+          print("Found No of Obsrvations : " + suspectedObservations.length.toString());
+          ObservationAPIService observationAPIService = new ObservationAPIService();
+          String suspectedDisease =
+          suspectedDiseaseFromObservation = await observationAPIService.analyseObservations(suspectedObservations).whenComplete(() => {
+            print("Suspected Disease : " + suspectedDiseaseFromObservation),
+            SmartDialog.dismiss(),
+          });
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => AnalyseHabitChatBotPage(diseaseList: suspectImageAnalysisDiseaseList, petID: petID, userID: userID, imageAnalysis: imageAnalysis,
+                  answeredObservationQuestionList: observationQuestionList, suspectedDiseaseFromObservations: suspectedDisease)
+            // builder: (context) => ObservationDetection()
+          ));
+
+        }else{
+          await Future.delayed(Duration(seconds: 5));
+          insertSingleItem(observationQuestionList.elementAt(lastCalledIndex + 1).observationQuestion + "?..<bot>");
+          lastCalledIndex ++;
+        }
+
+      }else if (_lastInput.toLowerCase() == 'quit' || _lastInput.toLowerCase() == 'exit') {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      }else{
+        ObservationAPIService observationAPIService = new ObservationAPIService();
+        String response = await observationAPIService.analyseUserInput(_lastInput);
+        insertSingleItem(response + "<bot>");
       }
-      finally{
-        client.close();
-        queryController.clear();
-      }
+
     }
   }
 
@@ -367,10 +368,11 @@ class _AnalyseObservationChatBotPageState extends State<AnalyseObservationChatBo
                 child: Text(
                   item.replaceAll("<bot>", ""),
                   style: TextStyle(
-                      color: mine? Colors.white : Colors.black
+                    fontSize: 17,
+                      color: mine? Colors.black : Colors.black
                   ),
                 ),
-                color: mine? Colors.deepPurpleAccent : Colors.grey[200],
+                color: mine? Colors.blue[100] : Colors.grey[200],
                 padding: BubbleEdges.all(10)
             ),
           ),

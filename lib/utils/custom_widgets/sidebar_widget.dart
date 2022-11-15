@@ -1,7 +1,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:happy_pet/services/authenticate_service.dart';
+import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/popups/dialogs.dart';
 

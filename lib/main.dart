@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+// import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:happy_pet/model/userDetail.dart';
 import 'package:happy_pet/screens/happypet/app_home/class_builder.dart';
 import 'package:happy_pet/screens/happypet/app_home/AppBase_Screen.dart';
 import 'utils/custom_widgets/loader_widget.dart';
 import 'screens/wrapper.dart';
-import 'package:happy_pet/services/authenticate_service.dart';
+import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -48,6 +50,9 @@ class _HappyPetAppState extends State<HappyPetApp> {
         theme: ThemeData(primaryColor : COLOR_BROWN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
 
         home: Wrapper(),
+        navigatorObservers: [FlutterSmartDialog.observer],
+        // here
+        builder: FlutterSmartDialog.init(),
         //Routes
         routes:{
           SignupScreen.routeName: (ctx) => SignupScreen(),
