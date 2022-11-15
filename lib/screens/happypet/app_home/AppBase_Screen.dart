@@ -1,9 +1,11 @@
 import 'dart:ui';
 
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:happy_pet/screens/happypet/app_home/class_builder.dart';
 import 'package:happy_pet/screens/happypet/app_home/home.dart';
+import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/trash/profile.dart';
 import 'package:happy_pet/screens/happypet/app_remedies/remedies.dart';
 import 'package:happy_pet/trash/settings.dart';
@@ -13,6 +15,8 @@ import 'package:happy_pet/screens/happypet/image_detection/Image_Detection.dart'
 import 'package:happy_pet/screens/happypet/observation_detection/Observation_Detection.dart';
 import 'package:happy_pet/screens/happypet/remedy_detection/Remedy_Detetction.dart';
 import 'package:happy_pet/utils/constants.dart';
+import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
+import 'package:happy_pet/utils/popups/dialogs.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 
 import '../../../trash/Feeds_Screen.dart';
@@ -31,84 +35,11 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-// class _HomeScreenState extends State<HomeScreen> {
-//   int pageNumber = 0;
-//
-//   _HomeScreenState(this.pageNumber);
-//
-//   GlobalKey<CurvedNavigationBarState> _bottomNavigationKey = GlobalKey();
-//   var _pageController;
-//   List<Widget> _screens = [
-//     ImageDetection(),
-//     ObservationDetection(),
-//     HabitDetection(),
-//     RemedyDetection(),
-//     //Feeds(),
-//     //Settings(),
-//   ];
-//   void _onPageChanged(int index){}
-//   void _onItemTapped(int selectedIndex){
-//     print(selectedIndex);
-//     _pageController.jumpToPage(selectedIndex);
-//   }
-//   @override
-//   void initState() {
-//     // TODO: implement initState
-//     super.initState();
-//     _pageController = PageController(
-//       initialPage: pageNumber,
-//     );
-//   }
-//
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final double screenWidth = window.physicalSize.width;
-//     final double screenHeight = window.physicalSize.height;
-//     double iconSize = 20;
-//     if(screenWidth < 500){
-//       iconSize = 15;
-//     }
-//     return Scaffold(
-//         bottomNavigationBar: CurvedNavigationBar(
-//
-//           key: _bottomNavigationKey,
-//           index: pageNumber,
-//           height: iconSize * 2.5,
-//           items: <Widget>[
-//             Icon(Icons.add, size: iconSize, color: COLOR_WHITE),
-//             Icon(Icons.question_answer_rounded, size: iconSize, color: COLOR_WHITE),
-//             Icon(Icons.query_builder, size: iconSize, color: COLOR_WHITE),
-//             Icon(Icons.analytics, size: iconSize, color: COLOR_WHITE),
-//             //Icon(Icons.settings, size: iconSize, color: COLOR_WHITE)
-//           ],
-//           color: COLOR_BROWN,
-//           backgroundColor: COLOR_WHITE,
-//           buttonBackgroundColor: COLOR_BROWN,
-//           animationCurve: Curves.easeInOut,
-//           animationDuration: Duration(milliseconds: 600),
-//           onTap: (index) {
-//             setState(() {
-//               _onItemTapped(index);
-//             });
-//           },
-//           letIndexChange: (index) => true,
-//
-//         ),
-//       body: PageView(
-//         controller: _pageController,
-//         children: _screens,
-//
-//         onPageChanged: _onPageChanged,
-//         physics: NeverScrollableScrollPhysics(),
-//
-//       )
-//     );
-//   }
-//
-// }
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late KFDrawerController _drawerController;
+  final AuthenticateService _authenticateService = AuthenticateService();
+
+
 
   double drawerItemHeight = 60;
   double drawerItemWidth = 300;
@@ -280,6 +211,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    User? user = _authenticateService.authUser;
     return Scaffold(
       body: KFDrawer(
         controller: _drawerController,
@@ -311,9 +243,9 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    new Text('D. S. P Madusanka', style: new TextStyle(fontSize: 17, color: Colors.white)),
+                    new Text('DUMMY USER NAME', style: new TextStyle(fontSize: 17, color: Colors.white)),
                     new SizedBox(height: 2),
-                    new Text('IT18000001', style: new TextStyle(fontSize: 15, color: Colors.grey)),
+                    new Text(user!.email!.trim(), style: new TextStyle(fontSize: 15, color: Colors.grey)),
                   ],
                 )
               ],
@@ -334,9 +266,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Icon(Icons.settings, color: Colors.white),
                 SizedBox(width: 10,),
                 Container(
-                  child: Text(
-                    'Logout',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  child: TextButton(
+                    onPressed: () async {
+                      Dialogs.confirm(context, "Confirm Your Action", "Do you want to log out from Happy Pet?", signOut );
+
+                    },
+                    child: Text(
+                      'Logout',
+                      style: TextStyle(color: Colors.white, fontSize: 18),
+                    ),
+
                   ),
                 ),
               ],
@@ -359,7 +298,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         ),
       ),
     );
+
   }
+ void signOut(){
+   try{
+     _authenticateService.signOut();
+   }catch(exception){
+     ToastMessage.showErrorToast("Error Occurred while sign out from the application..");
+   }
+  }
+
 }
 /*
 

@@ -1,22 +1,33 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
+import 'package:happy_pet/utils/custom_widgets/loader_widget.dart';
+import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
 
 import 'login_screen.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignUpScreen extends StatefulWidget {
   static const routeName = '/signup';
+  final VoidCallback onClickedLogin;
+
+  const SignUpScreen({
+    Key? key,
+    required this.onClickedLogin,
+  }) : super(key: key);
+
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _SignUpScreenState createState() => _SignUpScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
 
   final GlobalKey<FormState> _formKey = GlobalKey();
-  final AuthService _authService = AuthService();
-  bool loading = false;
+  final AuthenticateService _authenticateService = AuthenticateService();
+  bool isLoading = false;
 
   //form field states
   String email = '';
@@ -25,9 +36,9 @@ class _SignupScreenState extends State<SignupScreen> {
 
   TextEditingController _passwordController = new TextEditingController();
   void _submit() async{
-    setState(() => loading = true) ;
+    setState(() => isLoading = true) ;
     if(_formKey.currentState!.validate()){
-      dynamic result = await _authService.registerWithEmailAndPassword(email, password);
+      dynamic result = await _authenticateService.registerWithEmailAndPassword(email, password);
       if(result.toString().contains('already in use by another account')){
         setState(() => registerError = 'The email address is already in use by another account');
       }
@@ -36,7 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return Scaffold(
+    return  isLoading ? Loader() : Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
@@ -77,12 +88,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         TextFormField(
                           decoration: customInputDecoration('ENTER YOUR EMAIL', size, Icons.email),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (value){
-                            if(value!.isEmpty || !value.contains('@')){
-                              return 'Invalid Email';
-                            }
-                            return null;
-                          },
+                          validator: (value) =>
+                          value!.isEmpty && !EmailValidator.validate(email)
+                              ? 'Enter a valid Email'
+                              : null,
                           onChanged: (value){
                             setState(() => email = value);
                           },
@@ -95,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           controller: _passwordController,
                           validator: (value){
                             if(value!.isEmpty || value.length <= 5){
-                              return 'Invalid Password';
+                              return 'Enter min. 6 characters';
                             }
                             return null;
                           },
@@ -107,7 +116,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           obscureText: true,
                           validator: (value){
                             if(value!.isEmpty || value != _passwordController.text){
-                              return 'Invalid Password';
+                              return 'Passwords does not match !';
                             }
                             return null;
                           },
@@ -137,45 +146,32 @@ class _SignupScreenState extends State<SignupScreen> {
                           ),
                           onPressed: () async{
                             if(_formKey.currentState!.validate()){
-                              _submit();
+                              signUp();
                             }
 
                           },
 
                         ),
-                        Row(
-                          children: [
-                            Text(
-                                'Already Signed Up? Click'
-                            ),
-                            addHorizontalSpace(20),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  primary: COLOR_GREEN
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.person,
-                                  ),
-                                  Text(
-                                      'Login',
-                                      style: TextStyle(
-                                        color: Colors.white,
-
-                                      )
-                                  )
-                                ],
-                              ),
-                              onPressed: () async{
-                                Navigator.of(context).pushReplacementNamed(LoginScreen.routeName);
-
-                              },
-
-                            )
-                          ],
+                        SizedBox(
+                          height: 5,
                         ),
+                        RichText(
+                            text: TextSpan(
+                                style: TextStyle(color: Colors.black, fontSize: 15),
+                                text: 'Already have an account? ',
+                                children: [
+                                  TextSpan(
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = widget.onClickedLogin,
+                                      text: "Log In",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          color: Colors.blue,
+                                        fontSize: 16
+                                      )
+                                  ),
+                                ]
+                            )),
 
                       ],
                     ),
@@ -187,5 +183,19 @@ class _SignupScreenState extends State<SignupScreen> {
         ],
       ),
     );
+  }
+  Future signUp() async {
+    setState(() => isLoading = true);
+    try{
+      dynamic result = await _authenticateService.registerWithEmailAndPassword(email, password);
+      if(result.toString().contains('already in use by another account')){
+        setState(() => registerError = 'The email address is already in use by another account');
+      }
+    } catch(exception){
+      ToastMessage.showErrorToast("Error Occurred while sign in, Please try again !..");
+      print(exception);
+    }
+    setState(() => isLoading = false);
+
   }
 }

@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService{
+class AuthenticateService{
 
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 //create User obj based on firebase user
@@ -9,18 +9,17 @@ class AuthService{
   }
   //auth change user stream
   Stream<User?> get user{
-    print(userFromFirebaseUser);
-    return firebaseAuth.authStateChanges();
+    return FirebaseAuth.instance.authStateChanges();
   }
 
-  User? get authUser{
-    FirebaseAuth.instance.currentUser;
+  User? get authUser {
+    return FirebaseAuth.instance.currentUser;
   }
   //sign in Anon
   Future signInAnon() async{
 
     try{
-      UserCredential credentialResult = await firebaseAuth.signInAnonymously();
+      UserCredential credentialResult = await FirebaseAuth.instance.signInAnonymously();
       User? user = credentialResult.user;
       return userFromFirebaseUser(user);
     }catch( exception){
@@ -34,7 +33,7 @@ class AuthService{
     print('email is :'+email);
     print('password :' +password);
     try{
-      UserCredential userCredential = await firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       return userFromFirebaseUser(user);
     }catch(exception){
@@ -48,7 +47,7 @@ class AuthService{
     print('email is :'+email);
     print('password :' +password);
     try{
-      UserCredential userCredential = await firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       User? user = userCredential.user;
       return userFromFirebaseUser(user);
     }catch(exception){
@@ -58,17 +57,17 @@ class AuthService{
   }
 
   Future getCurrentUser() async {
-    User? user = firebaseAuth.currentUser;
+    User? user = FirebaseAuth.instance.currentUser;
     return user;
   }
 
   //sign out
   Future signOut() async{
     try{
-      return await firebaseAuth.signOut();
+      return await FirebaseAuth.instance.signOut();
     }catch(exception){
       print(exception.toString());
-      return null;
+      return exception;
     }
   }
 }

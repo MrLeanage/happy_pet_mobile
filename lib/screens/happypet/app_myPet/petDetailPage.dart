@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:happy_pet/screens/happypet/app_remedies/startDiagnosticPage.dart';
+import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/utility.dart';
@@ -14,15 +15,18 @@ class PetDetailPage extends StatefulWidget {
 }
 
 class _PetDetailPageState extends State<PetDetailPage> {
+  final AuthenticateService authenticateService = new AuthenticateService();
+
   String imagePath;
   _PetDetailPageState(this.imagePath);
   String petID = 'p123';
-  String userID = 'xyz@gmail.com';
+
 
   bool tempValue = false;
 
   @override
   Widget build(BuildContext context) {
+    String? userID = authenticateService.authUser!.email;
 
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
@@ -40,7 +44,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
           ),
 
           Padding(
-            padding: EdgeInsets.only(top: size.height * 0.36, left: size.width * 0.012, right:size.width * 0.012 ),
+            padding: EdgeInsets.only(top: size.height * 0.44, left: size.width * 0.012, right:size.width * 0.012 ),
             child: ListView(
               children: [
                 new Align(
@@ -918,7 +922,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                            image: AssetImage(APP_BACKGROUND_PATH),
+                            image: AssetImage(APP_AVATAR_PATH),
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(width: 15)
@@ -932,7 +936,7 @@ class _PetDetailPageState extends State<PetDetailPage> {
               alignment: Alignment.topCenter,
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.26,
+                  height: MediaQuery.of(context).size.height * 0.28,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
