@@ -7,112 +7,93 @@ import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
 import 'package:http/http.dart' as http;
 
 class RemedyAPIService{
-  final String serverName = 'happypet4';
-  Future <RemedyAnalysis> analyzeNewRemedy(Remedy remedy) async {
-    print("Function Called");
-    print('Steps : ' + remedy.remedySteps.toString());
-    // String name = "Macules";
-    // String title = "aloe vera treatment new";
-    // String brief = "apply aloe vera new";
-    // var steps = ["Slice aloe 2t", "Get the gel ", "put  in a bowl", "smash it well", "apply on area"];
-    // Slice aloe 2t. Get the gel. put  in a bowl. smash it well. apply on area
+  final String _remedyAnalysisServerName = 'happypet4';
 
-    var url = Uri.parse('http://happypet4.pythonanywhere.com/check_remedy');
 
-    Map data = {"disease": remedy.diseaseName,
-      "remedy-id": "000",
-      "title": remedy.remedyTitle.toString(),
-      "brief-intro": remedy.remedyBrief.toString(),
-      "steps": remedy.remedySteps
+  Future<Remedy> checkNewRemedyExistence(Remedy newRemedy) async {
+    print("New Remedy :" + newRemedy.remedyTitle);
+    late Remedy analysedRemedy;
+    var url = Uri.parse('http://' + _remedyAnalysisServerName +
+        '.pythonanywhere.com/check_remedy/');
+    //encode Map to JSON
+
+    Map data = {"disease": newRemedy.diseaseName,
+      "remedy-id": "0000",
+      "title": newRemedy.remedyTitle,
+      "brief-intro": newRemedy.remedyBrief,
+      "steps": newRemedy.remedySteps
     };
-
-    // Map data = {
-    //   'disease': name,
-    //   'remedy-id': 101,
-    //   'title': title,
-    //   'brief-intro': brief,
-    //   'steps': steps
-    // };
-
+    //encode Map to JSON
     var body = json.encode(data);
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: body
-    );
-    print('Response Data : ' + response.statusCode.toString());
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: body
+      );
 
+      if (response.statusCode == 200) {
+        var decodedBody = json.decode(response.body);
 
-    if(response.statusCode == 200) {
-      print(response.body);
+        if (decodedBody['status'] == 200) {
+          analysedRemedy = Remedy.fromAvailabilityJson(decodedBody);
+
+          // ToastMessage.showSuccessToast(imageAnalysis.analysis.toString());
+        } else
+          ToastMessage.showErrorToast(
+              "Error Occurred while Processing your data. Please Try again");
+      } else {
+        ToastMessage.showErrorToast(
+            "Error Occurred while Retrieving  data. Please Try again");
+      }
+    } on Exception catch (ignoredException) {
+      ToastMessage.showErrorToast(
+          "Error Occurred while Retrieving data. Please Try again");
     }
-
-    var remedyAnalysis;
-    if(response.statusCode == 200){
-      var analysisReport = json.decode(response.body);
-
-      remedyAnalysis = RemedyAnalysis.fromJson(analysisReport);
-    }else{
-      ToastMessage.showErrorToast("Error Occurred While Retrieving");
-    }
-    // if(remedyAnalysis.isEmpty){
-    //   ToastMessage.showErrorToast("No Records Found");
-    // }
-
-    return remedyAnalysis;
+    print("Server Response :  " + analysedRemedy.remedyTitle);
+    return analysedRemedy;
   }
 
-  Future <RemedyAnalysis> retrainModelForNewRemedy(Remedy remedy) async {
-    print("Function Called");
-    print('Steps : ' + remedy.remedySteps.toString());
-    // String name = "Macules";
-    // String title = "aloe vera treatment new";
-    // String brief = "apply aloe vera new";
-    // var steps = ["Slice aloe 2t", "Get the gel ", "put  in a bowl", "smash it well", "apply on area"];
-    // Slice aloe 2t. Get the gel. put  in a bowl. smash it well. apply on area
+  Future<Remedy> retrainRemedyModel(Remedy newRemedy) async {
+    late Remedy analysedRemedy;
+    var url = Uri.parse('http://' + _remedyAnalysisServerName +
+        '.pythonanywhere.com/retrain_remedies/');
+    //encode Map to JSON
 
-    var url = Uri.parse('http://happypet4.pythonanywhere.com/retrain_remedies');
-
-    Map data = {"disease": remedy.diseaseName,
-      "remedy-id": "000",
-      "title": remedy.remedyTitle.toString(),
-      "brief-intro": remedy.remedyBrief.toString(),
-      "steps": remedy.remedySteps
+    Map data = {"disease": newRemedy.diseaseName,
+      "remedy-id": newRemedy.id,
+      "title": newRemedy.remedyTitle,
+      "brief-intro": newRemedy.remedyBrief,
+      "steps": newRemedy.remedySteps
     };
-
-    // Map data = {
-    //   'disease': name,
-    //   'remedy-id': 101,
-    //   'title': title,
-    //   'brief-intro': brief,
-    //   'steps': steps
-    // };
-
+    //encode Map to JSON
     var body = json.encode(data);
 
-    var response = await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: body
-    );
-    print('Response Data : ' + response.statusCode.toString());
+    try {
+      var response = await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: body
+      );
 
+      if (response.statusCode == 200) {
+        var decodedBody = json.decode(response.body);
 
-    if(response.statusCode == 200) {
-      print(response.body);
+        if (decodedBody['status'] == 200) {
+          analysedRemedy = Remedy.fromRetrainJson(decodedBody);
+
+          // ToastMessage.showSuccessToast(imageAnalysis.analysis.toString());
+        } else
+          ToastMessage.showErrorToast(
+              "Error Occurred while Processing your data. Please Try again");
+      } else {
+        ToastMessage.showErrorToast(
+            "Error Occurred while Retrieving  data. Please Try again");
+      }
+    } on Exception catch (ignoredException) {
+      ToastMessage.showErrorToast(
+          "Error Occurred while Retrieving data. Please Try again");
     }
-
-    var remedyAnalysis;
-    if(response.statusCode == 200){
-      var analysisReport = json.decode(response.body);
-
-      remedyAnalysis = RemedyAnalysis.fromJson(analysisReport);
-    }else{
-      ToastMessage.showErrorToast("Error Occurred While Retrieving");
-    }
-    // if(remedyAnalysis.isEmpty){
-    //   ToastMessage.showErrorToast("No Records Found");
-    // }
-
-    return remedyAnalysis;
+    print("Server Response :  " + analysedRemedy.remedyTitle);
+    return analysedRemedy;
   }
 }

@@ -74,7 +74,16 @@ Container customRatingBar(int userCount, int totalRate){
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Text(
-                'Ratings by users ($rate / 5.0): '
+                'Ratings by users: '
+            )
+          ],
+
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+                '($rate / 5.0) '
             )
           ],
 

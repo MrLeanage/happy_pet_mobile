@@ -8,7 +8,7 @@ class RemedyAnalysis{
   RemedyAnalysis( this._remedyData, this._analyseMessage, this._remedyExistence );
 
   RemedyAnalysis.fromJson(var json){
-    _remedyData = Remedy.fromJson(json);
+    _remedyData = Remedy.fromRetrainJson(json);
     _analyseMessage = json['report']['analyze-message'];
     _remedyExistence = json['report']['new-remedy-exist'];
   }

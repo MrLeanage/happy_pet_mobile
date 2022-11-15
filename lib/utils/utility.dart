@@ -5,11 +5,38 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:happy_pet/utils/constants.dart';
+import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
 import 'package:intl/intl.dart';
-
+import 'dart:io';
 import 'custom_widgets/snackBar_widget.dart';
 
 class Utility{
+
+  Utility();
+
+   static Future<bool> isConnectedToNetwork() async {
+    final message = 'You have no Internet';
+    bool isConnectedToInternet = false;
+
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        isConnectedToInternet = true;
+        print('connected');
+        // ToastMessage.showSuccessToast("Connected to Internet");
+        CustomSnackBar.showSuccessSnack( "Connected to Internet");
+      }
+    } on SocketException catch (_) {
+      print('not connected');
+      // ToastMessage.showErrorToast("Not Connected to Internet");
+      CustomSnackBar.showErrorSnack( "Not Connected to Internet");    }
+
+    // final color = isConnectedToInternet ? COLOR_GREEN : COLOR_RED;
+    // CustomSnackBar.showTopSnackBar(context, 'Internet Connectivity Status', message, color);
+
+    return isConnectedToInternet;
+  }
+
   static showConnectivitySnackBar(ConnectivityResult result, BuildContext context){
     final hasInternet = result != ConnectivityResult.none;
     final message = hasInternet
@@ -19,6 +46,7 @@ class Utility{
     CustomSnackBar.showTopSnackBar(context, 'Internet Connectivity Status', message, color);
     //SnackBar.showTopSnackBar(context, msg, color);
   }
+
 
   String formatCurrency(num amount, {int decimalCount = 0}){
     final formatCurrency = new NumberFormat.simpleCurrency(decimalDigits: decimalCount);
@@ -84,4 +112,26 @@ class Utility{
     return box.size;
   }
 
+
+  //Snack Bars
+
+  static void showErrorSnack(String errorMessage, BuildContext context){
+    final snackBar = CustomSnackBar.showErrorSnack(errorMessage);
+    //
+    // // Find the ScaffoldMessenger in the widget tree
+    // // and use it to show a SnackBar.
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  static Future<bool> validateAppInternetConnection(BuildContext context) async{
+
+    if(!await isConnectedToNetwork()){
+      final snackBar = CustomSnackBar.showNetworkFailureSnack(context);
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      return false;
+    }else{
+      return true;
+    }
+  }
 }

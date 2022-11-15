@@ -54,7 +54,7 @@ class _StartDiagnosisPageState extends State<StartDiagnosisPage> {
                       ),
                       child: new Column(
                         children: <Widget>[
-                          SizedBox(height: 10),
+                          SizedBox(height: size.height * 0.05),
 
                           Container(
                             alignment: Alignment.centerLeft,
@@ -97,8 +97,8 @@ class _StartDiagnosisPageState extends State<StartDiagnosisPage> {
                                           print('Edit Clicked'),
                                         Navigator.of(context).push(MaterialPageRoute(
                                             builder: (context) => AnalysePetImagesPage(
-                                              petID: "p123",
-                                              userID: "u123",
+                                              petID: petID,
+                                              userID: userID,
                                             )
                                           )
                                         )},

@@ -1,13 +1,23 @@
 
+import 'dart:collection';
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:happy_pet/screens/happypet/habit_detection/analysehabitChatbotPage.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:happy_pet/model/imageAnalysis/imageAnalysis.dart';
+import 'package:happy_pet/model/observationAnalysis/observationQuestion.dart';
 import 'package:happy_pet/screens/happypet/observation_detection/analyseObservationChatbotPage.dart';
-import 'package:happy_pet/screens/happypet/remedy_detection/diagnosisReportPage.dart';
+import 'package:happy_pet/services/api_services/firebase_api_services.dart';
+import 'package:happy_pet/services/api_services/image_detection_api_services.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
+import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
+import 'package:happy_pet/utils/custom_widgets/appLoader.dart';
+import 'package:happy_pet/utils/custom_widgets/snackBar_widget.dart';
+import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
+import 'package:happy_pet/utils/utility.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class AnalysePetImagesPage extends StatefulWidget {
   final petID;
@@ -29,54 +39,90 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
   UploadTask? uploadTask;
   String pickedImageFile ='';
   late XFile? selectedImage;
-  String uid = "abc@gmail.com";
   _AnalysePetImagesPageState(this.petID, this.userID);
 
-  bool tempValue = false;
+  late List<File?> selectedImageList = [];
+  final Map<String, File> selectedImageMapList = HashMap();
 
+  late bool isLoadedData = false;
+
+  List<ObservationQuestion> observationQuestionList = [];
+
+  // List imageNameList = ["image_picker1302420444.jpg", "image_picker1316107505.jpg", "image_picker6078582728273119108.jpg"];
 
   Future selectImage() async {
     final ImagePicker imagePicker = ImagePicker();
     selectedImage = await imagePicker.pickImage(source: ImageSource.gallery);
-    print(selectedImage?.path);
+
+    setState(() {
+      var a = selectedImage?.path;
+      pickedImageFile = a!;
+
+    });
+
     if(selectedImage == null)
       return;
-    setState(() {
-      var a = selectedImage!.path;
-      pickedImageFile = a;
-    }
-    );
-  }
 
-  Future uploadFile() async {
-    final path = 'image_files/${uid}/${selectedImage!.name}';
-    final file = File(selectedImage!.path);
-
-    final ref = FirebaseStorage.instance.ref().child(path);
-    ref.putFile(file);
-
-    final snapshot = await uploadTask!.whenComplete(() {});
-
-    final urlDownload = await snapshot.ref.getDownloadURL();
-
-    print('Download Link :  $urlDownload');
+    selectedImageMapList.addAll({DateTime.now().toString()+ '.jpg': File(selectedImage!.path)});
+    //'image_files/$uid/'
+    print(selectedImage?.path);
   }
 
   void selectImagesCamera() async {
     final ImagePicker imagePicker = ImagePicker();
     final XFile? selectedImage = await imagePicker.pickImage(source: ImageSource.camera);
-    print(selectedImage?.path);
     setState(() {
       var a = selectedImage?.path;
       pickedImageFile = a!;
 
-    }
-    );
+    });
+    if(selectedImage == null)
+      return;
+    selectedImageMapList.addAll({ DateTime.now().toString()+ '.jpg': File(selectedImage.path)});
+
   }
+
+
+
+  uploadFile(Size size) async {
+
+    List<String> uploadedImageList = [];
+    FirebaseApiService firebaseApiService = new FirebaseApiService();
+    ImageDetectionAPIService imageDetectionAPIService = ImageDetectionAPIService();
+    List<String> diseaseList = [];
+    var imageAnalysis = new ImageAnalysis();
+    List<String> suspectImageAnalysisDiseaseList = [];
+    // List<String> diseaseList = ["Alopecia", "Comedones_blackheads", "Dranduff"];
+    selectedImageMapList.forEach((key, value) {
+      uploadedImageList.add(key);
+    });
+    await firebaseApiService.uploadImageList(selectedImageMapList, userID).whenComplete(() async => {
+      //getting names of uploaded images as a list
+
+    await Future.delayed(Duration(seconds: 3)),
+      print("Image Count : "+ uploadedImageList.length.toString()),
+      imageAnalysis = await imageDetectionAPIService.analyseDiseasedImageList(userID, uploadedImageList).whenComplete(() => {
+        imageAnalysis.analysedImageDisease.forEach((element) {
+          suspectImageAnalysisDiseaseList.add(element.diseaseName);
+        }),
+
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AnalyseObservationChatBotPage(imageAnalysis: imageAnalysis, petID: petID, userID: userID)
+          // builder: (context) => ObservationDetection()
+        )),
+
+        SmartDialog.dismiss(),
+      }).timeout(Duration(seconds: 15)),
+    }).timeout(Duration(seconds: 15));
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+
       body: Stack(
         children: <Widget>[
           new Container(
@@ -105,7 +151,7 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                       ),
                       child: new Column(
                         children: <Widget>[
-                          SizedBox(height: 10),
+                          SizedBox(height: size.height * 0.05),
 
                           Container(
                             alignment: Alignment.centerLeft,
@@ -113,12 +159,12 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(height: size.height * 0.005,),
+                                // SizedBox(height: size.height * 0.0025,),
                                 Row(
                                   children: [
                                     Container(
                                       width: size.width*0.9,
-                                      height: size.height*0.12 ,
+                                      height: size.height*0.1 ,
                                       child: Padding(
                                         padding: const EdgeInsets.all(0),
                                         child: RichText(
@@ -126,7 +172,7 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                                           textAlign: TextAlign.justify,
                                           text: TextSpan(
 
-                                            text: "We need some photographs of your pet where focused to the place of diseased. So Please attach some clear photographs bellow (min - 2 , max - 5)",
+                                            text: "We need some photographs of your pet where focused to the place of diseased. So Please attach some clear photographs bellow (min - 1 , max - 5)",
                                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: COLOR_BLACK),
 
                                           ),
@@ -137,38 +183,41 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
 
                                   ],
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          iconSize: 70,
-                                          icon: const Icon(Icons.camera),
-                                          onPressed: () {
-                                            selectImagesCamera();
-                                          },
-                                        ),
-                                        Text('Camera')
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      width: 50,
-                                    ),
-                                    Column(
-                                      children: [
-                                        IconButton(
-                                          iconSize: 70,
-                                          icon: const Icon(Icons.image),
-                                          onPressed: () {
-                                            selectImage();
-                                          },
-                                        ),
-                                        Text('Gallery'),
-                                      ],
-                                    ),
+                                AbsorbPointer(
+                                  absorbing: selectedImageMapList.length >= 5,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                            iconSize: 70,
+                                            icon: const Icon(Icons.camera),
+                                            onPressed: () {
+                                              selectImagesCamera();
+                                            },
+                                          ),
+                                          Text('Camera')
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        width: 50,
+                                      ),
+                                      Column(
+                                        children: [
+                                          IconButton(
+                                            iconSize: 70,
+                                            icon: const Icon(Icons.image),
+                                            onPressed: () {
+                                              selectImage();
+                                            },
+                                          ),
+                                          Text('Gallery'),
+                                        ],
+                                      ),
 
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -176,64 +225,46 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                                       padding: EdgeInsets.all(10),
                                       width: size.width*0.9,
                                       height: size.height*0.18 ,
-                                      child: ListView(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.only(left: 5, top: 2, bottom: 2, right: 5),
-                                            color: Colors.grey[400],
-                                            child: Text(
-                                              '1. IMG_2022_10_21_7800.jpg',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold
+                                      child: ListView.builder(
+                                        itemCount: selectedImageMapList.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          return Card(
+                                            child: ListTile(
+                                              tileColor: Colors.grey[100],
+                                              dense: true,
+                                              visualDensity: VisualDensity(vertical: -3),
+                                              title: Text(
+                                                (index + 1).toString() +'. '+ selectedImageMapList.keys.elementAt(index),
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold
+                                                ),
                                               ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 5, top: 2, bottom: 2, right: 5),
-                                            color: Colors.grey[400],
-                                            child: Text(
-                                              '2. IMG_2022_10_21_7801.jpg',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold
+                                              trailing: ElevatedButton(
+                                                style: ElevatedButton.styleFrom(
+                                                  primary: Colors.grey[100]
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    selectedImageMapList.remove(selectedImageMapList.keys.elementAt(index));
+                                                  });
+                                                },
+                                                child:  Icon(
+                                                    Icons.delete,
+                                                  color: COLOR_GREY,
+                                                ),
+                                                
                                               ),
+                                              onTap: (){
+                                                debugPrint("List Tile Tapped");
+                                                // Navigator.push(context, MaterialPageRoute(builder: (context){
+                                                //
+                                                //   // return ViewViableCrop(cropItemList[index]);
+                                                // }));
+                                              },
+
                                             ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 5, top: 2, bottom: 2, right: 5),
-                                            color: Colors.grey[400],
-                                            child: Text(
-                                              '3. IMG_2022_10_21_7802.jpg',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 5, top: 2, bottom: 2, right: 5),
-                                            color: Colors.grey[400],
-                                            child: Text(
-                                              '4. IMG_2022_10_21_7803.jpg',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                          Container(
-                                            padding: EdgeInsets.only(left: 5, top: 2, bottom: 2, right: 5),
-                                            color: Colors.grey[400],
-                                            child: Text(
-                                              '5. IMG_2022_10_21_7804.jpg',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 5,),
-                                        ],
+                                          );
+                                        },
                                       ),
                                     )
                                   ],
@@ -246,15 +277,42 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                                       padding: EdgeInsets.only(left: 10, top: 5, bottom: 5, right: 5),
                                       // color: Colors.redAccent,
                                       child: ElevatedButton(
-                                        onPressed: () => {
-                                          print('Edit Clicked'),
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => DiagnosisReportPage(
-                                                petID: "p123",
-                                                userID: "u123",
-                                              )
-                                          )
-                                          )},
+                                        onPressed:  () async {
+
+                                          // Navigator.pop(context),
+                                          // uploadFile(),
+                                          //
+                                          //  CircularProgressIndicator(),
+                                          // print("SUCCESS")
+
+
+                                          if(selectedImageMapList.length != 0){
+                                            if(await Utility.validateAppInternetConnection(context)){
+                                              uploadFile(size);
+                                              SmartDialog.showLoading(
+                                                widget: AppLoader.popupLoader(size),
+                                              );
+                                            }
+                                          }else{
+                                            Utility.showErrorSnack("Please Attach Images of your pet's diseased area before tap on UPLOAD IMAGES", context);
+                                            //  final snackBar = CustomSnackBar.showErrorSnack("Please Attach Images of your pet's diseased area before tap on UPLOAD IMAGES");
+                                            // //
+                                            // // // Find the ScaffoldMessenger in the widget tree
+                                            // // // and use it to show a SnackBar.
+                                            // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                                            // SmartDialog.showToast('test toast');
+                                            // SmartDialog.showLoading(
+                                            //   widget: AppLoader.popupLoader(size),
+                                            //
+                                            // );
+                                            // await Future.delayed(Duration(seconds: 5));
+                                            // SmartDialog.dismiss();
+                                            // print("Clicked");
+                                            // await Future.delayed(Duration(seconds: 2));
+                                            // SmartDialog.dismiss();
+                                          }
+
+                                        },
                                         child: Wrap(children : [
                                           Icon(
                                             Icons.drive_folder_upload,
@@ -330,7 +388,7 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
               alignment: Alignment.topCenter,
               child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.26,
+                  height: MediaQuery.of(context).size.height * 0.24,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
@@ -347,7 +405,7 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
                         children: <Widget>[
                           Container(
                               width: size.width * 0.95,
-                              height: size.height * 0.180,
+                              height: size.height * 0.160,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                                 image: DecorationImage(image: AssetImage(APP_CAPTURE_IMAGES_COVER),
