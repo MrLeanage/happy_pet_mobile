@@ -163,7 +163,7 @@ class _StartDiagnosisPageState extends State<StartDiagnosisPage> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         image: DecorationImage(
-                            image: AssetImage(APP_BACKGROUND_PATH),
+                            image: AssetImage(APP_AVATAR_PATH),
                             fit: BoxFit.cover)),
                   ),
                   SizedBox(width: 15)

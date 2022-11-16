@@ -51,6 +51,7 @@
 // }
 import 'package:flutter/material.dart';
 import 'package:happy_pet/screens/happypet/app_myPet/petDetailPage.dart';
+import 'package:happy_pet/screens/happypet/app_remedies/remedyDetailPage.dart';
 import 'package:happy_pet/screens/happypet/remedy_detection/Remedy_Detetction.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
@@ -242,7 +243,7 @@ class _RemediesState extends State<Remedies> {
     return InkWell(
       onTap: (){
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => PetDetailPage(
+            builder: (context) => RemedyDetailPage(
               imgPath: 'assets/app/home-remedy-cover.jpg',
             )));
       },

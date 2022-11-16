@@ -17,8 +17,6 @@ class Dialogs{
                       fontSize: 20,
                     fontWeight: FontWeight.w400
                   ),
-
-
               ),
             ),
 
@@ -99,38 +97,59 @@ class Dialogs{
       Navigator.pop(context);
     }
   }
-  confirm(BuildContext context, String title, String description, Function function){
+  static confirm(BuildContext context, String title, String description, Function function){
     return  showDialog(
         context: context,
         barrierDismissible: true,
         builder: (BuildContext context){
           return AlertDialog(
-            title: Text(title),
+            title: Container(
+              padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+              color: Colors.amber[200],
+              child: Text(
+                title,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400
+                ),
+              ),
+            ),
 
             content: SingleChildScrollView(
               child: ListBody(
 
                 children: <Widget>[
-                  Text(description)
+                  Container(
+                    padding: EdgeInsets.all(5),
+                    child: Text(
+                      description,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400
+                      ),),
+                  )
                 ],
               ),
             ),
             actions: <Widget>[
-              TextButton(
-                  onPressed: (){
-                    print('yes');
-                    function();
-                    Navigator.pop(context);
-                  },
-                  child: Text('Yes')
+              ElevatedButton(
+                child: Text('Yes'),
+                onPressed: (){
+                  function();
+                  Navigator.of(context).pop(context);
+                },
               ),
-              TextButton(
-                  onPressed: (){
-                    print('No');
-                    Navigator.pop(context);
-                  },
-                  child: Text('Cancel')
-              )
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                primary: Colors.redAccent
+                ),
+                child: Text('Cancel'),
+                onPressed: (){
+                  Navigator.of(context).pop(context);
+                },
+              ),
             ],
 
           );

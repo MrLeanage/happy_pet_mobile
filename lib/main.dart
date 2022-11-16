@@ -6,7 +6,7 @@ import 'package:happy_pet/model/userDetail.dart';
 import 'package:happy_pet/screens/happypet/app_home/class_builder.dart';
 import 'package:happy_pet/screens/happypet/app_home/AppBase_Screen.dart';
 import 'utils/custom_widgets/loader_widget.dart';
-import 'screens/wrapper.dart';
+import 'screens/authenticate/wrapper.dart';
 import 'package:happy_pet/services/api_services/authenticate_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +31,8 @@ Future main () async {
 
   runApp(HappyPetApp());
 }
+
+
 class HappyPetApp extends StatefulWidget {
   @override
   _HappyPetAppState createState() => _HappyPetAppState();
@@ -43,22 +45,26 @@ class _HappyPetAppState extends State<HappyPetApp> {
   @override
   Widget build(BuildContext context) {
 
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
+    return StreamProvider<User?>.value(
+        value: FirebaseAuth.instance.authStateChanges(),
+        initialData: FirebaseAuth.instance.currentUser,
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
 
-        title: 'Happy Pet',
-        theme: ThemeData(primaryColor : COLOR_BROWN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
+          title: 'Happy Pet',
+          theme: ThemeData(primaryColor : COLOR_BROWN, accentColor: COLOR_GREY, textTheme: screenWidth <500 ? TEXT_THEME_SMALL : TEXT_THEME_DEFAULT ),
 
-        home: Wrapper(),
-        navigatorObservers: [FlutterSmartDialog.observer],
-        // here
-        builder: FlutterSmartDialog.init(),
-        //Routes
-        routes:{
-          SignupScreen.routeName: (ctx) => SignupScreen(),
-          LoginScreen.routeName: (ctx) => LoginScreen(),
-          HomeScreen.routeName: (ctx) => HomeScreen()
-        }
+          home: Wrapper(),
+          navigatorObservers: [FlutterSmartDialog.observer],
+          // here
+          builder: FlutterSmartDialog.init(),
+          //Routes
+          // routes:{
+          //   SignUpScreen.routeName: (ctx) => SignUpScreen(),
+          //   LoginScreen.routeName: (ctx) => LoginScreen(),
+          //   HomeScreen.routeName: (ctx) => HomeScreen()
+          // }
+      ),
     );
     // var val = AuthService().user;
     // return StreamProvider (
