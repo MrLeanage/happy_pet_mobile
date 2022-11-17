@@ -18,5 +18,5 @@ class FirebaseUserProfileService{
   //  }catch (exception){
   //    throw exception;
   //  }
-  // }
+  }
 }
