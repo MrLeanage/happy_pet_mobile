@@ -7,7 +7,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:happy_pet/model/imageAnalysis/imageAnalysis.dart';
 import 'package:happy_pet/model/observationAnalysis/observationQuestion.dart';
 import 'package:happy_pet/screens/happypet/observation_detection/analyseObservationChatbotPage.dart';
-import 'package:happy_pet/services/api_services/firebase_api_services.dart';
+import 'package:happy_pet/services/data_services/firebase_file_services.dart';
 import 'package:happy_pet/services/api_services/image_detection_api_services.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
@@ -87,7 +87,7 @@ class _AnalysePetImagesPageState extends State<AnalysePetImagesPage> {
   uploadFile(Size size) async {
 
     List<String> uploadedImageList = [];
-    FirebaseApiService firebaseApiService = new FirebaseApiService();
+    FirebaseFileService firebaseApiService = new FirebaseFileService();
     ImageDetectionAPIService imageDetectionAPIService = ImageDetectionAPIService();
     List<String> diseaseList = [];
     var imageAnalysis = new ImageAnalysis();

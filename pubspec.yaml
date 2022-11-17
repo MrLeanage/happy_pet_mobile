@@ -1,5 +1,5 @@
 name: happy_pet
-description: HAPPY PET MOBILE 
+description: HAPPY PET MOBILE
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -30,7 +30,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firebase_auth: ^1.4.1
-#  cloud_firestore: ^2.2.2
+  #  cloud_firestore: ^2.2.2
   cloud_firestore: ^3.1.5
   firebase_storage: 8.0.0
   firebase_core: ^1.12.0
@@ -66,7 +66,7 @@ flutter_icons:
   ios: true
 
 flutter_launcher_name:
-    name: "Happy Pet"
+  name: "Happy Pet"
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -78,26 +78,26 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-      - assets/app/icon.png
-      - assets/app/logo-cover.png
-      - assets/app/avatar.png
-      - assets/app/diagnose-cover.png
-      - assets/app/ask-observation-cover.png
-      - assets/app/ask-habit-cover.jpg
-      - assets/app/capture-images-cover.jpg
-      - assets/app/diagnosis-report-cover.jpg
-      - assets/app/air-conditioner.png
-      - assets/app/creative.png
-      - assets/app/washing-machine.png
-      - assets/app/background.jpg
-      - assets/app/logo.png
-      - assets/app/home-remedy-cover.jpg
+    - assets/app/icon.png
+    - assets/app/logo-cover.png
+    - assets/app/avatar.png
+    - assets/app/diagnose-cover.png
+    - assets/app/ask-observation-cover.png
+    - assets/app/ask-habit-cover.jpg
+    - assets/app/capture-images-cover.jpg
+    - assets/app/diagnosis-report-cover.jpg
+    - assets/app/air-conditioner.png
+    - assets/app/creative.png
+    - assets/app/washing-machine.png
+    - assets/app/background.jpg
+    - assets/app/logo.png
+    - assets/app/home-remedy-cover.jpg
 
-      - assets/user/image.jpg
-      - assets/user/picture1.jpg
-      - assets/user/sheeba.jpg
-      - assets/user/toby.jpg
-      - assets/user/roxy.jpg
+    - assets/user/image.jpg
+    - assets/user/picture1.jpg
+    - assets/user/sheeba.jpg
+    - assets/user/toby.jpg
+    - assets/user/roxy.jpg
 
 
   # To add assets to your application, add an assets section, like this:

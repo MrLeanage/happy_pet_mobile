@@ -2,11 +2,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:happy_pet/services/api_services/authenticate_service.dart';
+import 'package:happy_pet/services/data_services/firebase_user_profile_service.dart';
 import 'package:happy_pet/utils/constants.dart';
 import 'package:happy_pet/utils/custom_widgets/FormField.dart';
 import 'package:happy_pet/utils/custom_widgets/addSpace_widget.dart';
 import 'package:happy_pet/utils/custom_widgets/loader_widget.dart';
 import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
+import 'package:happy_pet/utils/popups/dialogs.dart';
 
 import 'login_screen.dart';
 
@@ -30,6 +32,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool isLoading = false;
 
   //form field states
+  String name = '';
   String email = '';
   String password = '';
   String registerError = '';
@@ -85,6 +88,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       children: <Widget>[
                         Image.asset(APP_LOGO_COVER_PATH),
                         //Email Field
+                        TextFormField(
+                          decoration: customInputDecoration('ENTER YOUR NAME', size, Icons.account_box),
+                          keyboardType: TextInputType.text,
+                          validator: (value) =>
+                          value!.isEmpty && !EmailValidator.validate(name)
+                              ? 'Enter your full Name'
+                              : null,
+                          onChanged: (value){
+                            setState(() => name = value);
+                          },
+                        ),
+                        // password Field
+                        SizedBox(height: size.height * 0.02),
                         TextFormField(
                           decoration: customInputDecoration('ENTER YOUR EMAIL', size, Icons.email),
                           keyboardType: TextInputType.emailAddress,
@@ -190,6 +206,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
       dynamic result = await _authenticateService.registerWithEmailAndPassword(email, password);
       if(result.toString().contains('already in use by another account')){
         setState(() => registerError = 'The email address is already in use by another account');
+      }else{
+        // FirebaseUserProfileService firebaseUserProfileService = new FirebaseUserProfileService();
+        // await firebaseUserProfileService.createUserProfile(userName: name, userEmail: email);
+
+        // Dialogs.information(context, "Successful", "User Account Created Successfully!..", 1);
       }
     } catch(exception){
       ToastMessage.showErrorToast("Error Occurred while sign in, Please try again !..");

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:happy_pet/utils/custom_widgets/toastMessage.dart';
 
-class FirebaseApiService{
+class FirebaseFileService{
 
     Future<bool> uploadFiles(Map<String, File> mapFiles, String userID) async {
      FirebaseStorage storage = FirebaseStorage.instance;
